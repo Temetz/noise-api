@@ -1,0 +1,10 @@
+{
+  "name": "noise-api",
+  "private": true,
+  "version": "0.0.1",
+  "description": "Node.js noise-api using docker",
+  "author": "Teemu Kontio <teemutemetzkontio@gmail.com>",
+  "dependencies": {
+    "express": "4.12.3"
+  }
+}
