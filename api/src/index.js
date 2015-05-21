@@ -11,7 +11,7 @@ app.put('/limit', function (req, res) {
     shell.exec('sudo tc qdisc change dev lo root netem loss '+
                             req.body.loss+'% delay '+req.body.delay+
                             'ms', {silent:true});
-    var statusss = shell.exec('sudo tc qdisc show', {silent:true}).output;
+    var status = shell.exec('sudo tc qdisc show', {silent:true}).output;
     res.send('Status:' + status);
 });
 
