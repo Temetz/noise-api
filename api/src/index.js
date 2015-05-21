@@ -6,13 +6,19 @@ var PORT = 5300;
 
 // App
 var app = express();
-app.get('/node', function (req, res) {
-    var version = exec('node --version', {silent:true}).output;
-    res.send(version);
+app.use(require('body-parser')());
+app.put('/limit', function (req, res) {
+    shell.exec('sudo tc qdisc change dev lo root netem loss '+
+                            req.body.loss+'% delay '+req.body.delay+
+                            'ms', {silent:true}).output;
+
+    var status = shell.exec('sudo tc qdisc show', {silent:true}).output;
+    res.send('Status:' + status);
 });
 
 app.get('/', function (req, res) {
-    res.send('Hello! This is root');
+    console.log('shelsl');
+    res.send('Hello! This is root.');
 });
 
 app.listen(PORT);
