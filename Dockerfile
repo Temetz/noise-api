@@ -19,4 +19,4 @@ EXPOSE 80
 EXPOSE 443
 EXPOSE 5300
 
-CMD sudo service haproxy restart && node /api/src/index.js
+CMD sudo service haproxy restart && sudo tc qdisc add dev lo root netem loss 0% delay 0ms && node /api/src/index.js
