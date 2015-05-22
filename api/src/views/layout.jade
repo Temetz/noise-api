@@ -1,0 +1,32 @@
+doctype html
+html
+  head
+    title Noise API
+    script(src='https://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js')
+    link(rel='stylesheet' href='https://maxcdn.bootstrapcdn.com/bootstrap/3.3.1/css/bootstrap.min.css')
+    link(rel='stylesheet' href='https://maxcdn.bootstrapcdn.com/bootstrap/3.3.1/css/bootstrap-theme.min.css')
+    link(rel='stylesheet' href='stylesheets/style.css')
+    script(src='https://maxcdn.bootstrapcdn.com/bootstrap/3.3.1/js/bootstrap.min.js')
+    script(type='text/javascript').
+      function getFormData($form){
+        var unindexed_array = $form.serializeArray();
+        var indexed_array = {};
+          $.map(unindexed_array, function(n, i){
+           indexed_array[n['name']] = n['value'];
+         });
+        return indexed_array;
+      }
+
+body
+  div(class='wrapper')
+    nav(class='navbar navbar-inverse navbar-static-top')
+      div(class='container')
+        a(class='navbar-brand' href='/') Noise API
+        ul(class='nav navbar-nav')
+          //li(class='active')
+          li
+            a(href='/') Home
+          li
+            a(href='/configure') Configure
+    div(class='well')
+      block content
