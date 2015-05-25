@@ -17,11 +17,17 @@ app.set('view engine', 'jade');
 app.set('views', __dirname + '/views');
 
 app.put('/limit', function (req, res) {
-    shell.exec('sudo tc qdisc change dev lo root netem loss '+
-                            req.body.loss+'% delay '+req.body.delay+
-                            'ms', {silent:true});
+    var command = 'sudo tc qdisc change dev lo root netem ';
+    command += 'loss ' + req.body.loss + '% ';
+    command += 'delay ' + req.body.delay + 'ms ';
+    command += req.body.delayvariance + 'ms ';
+    if(req.body.jitter === 1){
+        command += 'distribution ' + req.body.distribution;
+
+    }
+    shell.exec(command, {silent:true});
     var status = shell.exec('sudo tc qdisc show', {silent:true}).output;
-    res.send('Status:' + status);
+    res.json(status);
 });
 
 app.get('/', function (req, res) {
