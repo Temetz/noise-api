@@ -31,7 +31,7 @@ app.put('/limit', function (req, res) {
 });
 
 app.put('/target', function (req, res) {
-    var command = "sudo sed -i '35s/.*/server target " + req.body.httptarget + ":80/' /etc/haproxy/haproxy.cfg";
+    var command = "sudo sed -i '33s/.*/server target " + req.body.httptarget + "/' /etc/haproxy/haproxy.cfg";
     shell.exec(command, {silent:true});
     var status = shell.exec('sudo service haproxy restart', {silent:true}).output;
     res.json(status);
