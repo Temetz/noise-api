@@ -5,9 +5,9 @@ html
     script(src='https://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js')
     link(rel='stylesheet' href='https://maxcdn.bootstrapcdn.com/bootstrap/3.3.1/css/bootstrap.min.css')
     link(rel='stylesheet' href='https://maxcdn.bootstrapcdn.com/bootstrap/3.3.1/css/bootstrap-theme.min.css')
-    link(rel='stylesheet' href='stylesheets/style.css')
+    link(rel='stylesheet' href='../static/stylesheets/style.css')
     script(src='https://maxcdn.bootstrapcdn.com/bootstrap/3.3.1/js/bootstrap.min.js')
-    script(src='js/utility.js')
+    script(src='../static/js/utility.js')
 
 body
   div(class='wrapper')
@@ -19,7 +19,9 @@ body
           li
             a(href='/') Home
           li
-            a(href='/configure') Configure
+            a(href='/gui/configure') Configure
+          li
+            a(href='/gui/target') Set target
     div(class='well')
       div(class='alert alert-info' role='alert' id='status' style='display: none')
       block content
