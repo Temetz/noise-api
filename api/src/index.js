@@ -53,5 +53,9 @@ app.get('/gui/target', function (req, res) {
     res.render('target');
 });
 
+app.get('/gui/login', function (req, res) {
+    res.render('login');
+});
+
 app.listen(PORT);
 console.log('Running on http://localhost:' + PORT);
