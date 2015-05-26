@@ -3,6 +3,7 @@ var express         = require('express');
 var shell           = require('shelljs');
 var path            = require("path");
 var bodyParser      = require('body-parser');
+var cookieParser    = require('cookie-parser');
 
 // Constants
 var PORT = 5300;
@@ -11,6 +12,7 @@ var PORT = 5300;
 var app = express();
 
 app.use(bodyParser.json());
+app.use(cookieParser('verysecurepassword'));
 app.use('/static', express.static(__dirname + '/public'));
 
 app.set('view engine', 'jade');
@@ -24,7 +26,7 @@ function checkUser(req, res, next) {
 
   if ( _.contains(nonSecurePaths, req.path) ) return next();
 
-  if(req.get('Authorization') == 'mytemptoken'){//authenticate user
+  if(req.cookies.apikey == process.env.APIKEY){//authenticate user
         next();
     }else
     {
@@ -57,9 +59,11 @@ app.put('/target', function (req, res) {
 app.post('/login', function (req, res) {
     if(req.body.apikey == process.env.APIKEY)
     {
+        res.cookie('apikey', req.body.apikey);
         res.json("Login success");
         return;
     }
+    res.cookie('apikey', '');
     res.status(401);
     res.json("Invalid login");
 });
