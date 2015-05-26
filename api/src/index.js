@@ -16,6 +16,23 @@ app.use('/static', express.static(__dirname + '/public'));
 app.set('view engine', 'jade');
 app.set('views', __dirname + '/views');
 
+app.all('*', checkUser);
+
+function checkUser(req, res, next) {
+  var _ = require('underscore')
+      , nonSecurePaths = ['/', '/gui/login', '/login'];
+
+  if ( _.contains(nonSecurePaths, req.path) ) return next();
+
+  if(req.get('Authorization') == 'mytemptoken'){//authenticate user
+        next();
+    }else
+    {
+        res.redirect('/gui/login');
+
+    }
+}
+
 app.put('/limit', function (req, res) {
     var command = 'sudo tc qdisc change dev lo root netem ';
     command += 'loss ' + req.body.loss + '% ';
@@ -35,6 +52,16 @@ app.put('/target', function (req, res) {
     shell.exec(command, {silent:true});
     var status = shell.exec('sudo service haproxy restart', {silent:true}).output;
     res.json(status);
+});
+
+app.post('/login', function (req, res) {
+    if(req.body.apikey == process.env.APIKEY)
+    {
+        res.json("Login success");
+        return;
+    }
+    res.status(401);
+    res.json("Invalid login");
 });
 
 app.get('/', function (req, res) {

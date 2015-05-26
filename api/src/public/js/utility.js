@@ -4,17 +4,20 @@ function ajaxRequest(method, url, formid){
       contentType: "application/json",
       url: url,
       data: JSON.stringify(getFormData($("#"+formid))),
-      dataType: "json"
+      dataType: "json",
+      beforeSend: function(){
+        $("#status").removeClass();
+      }
       })
         .done(function(data) {
           console.log("AJAX SUCCESS" + data);
+          $("#status").addClass('alert alert-success');
+          $("#status").text("Response: " + data).show();
          })
-        .fail(function() {
+        .fail(function(xhr) {
+          $("#status").addClass('alert alert-danger');
           console.log("AJAX FAIL");
-           alert("AJAX FAIL");
-        })
-        .always(function(data) {
-           $("#status").text("Response: " + data).show();
+           $("#status").text("Response: " + xhr.responseText).show();
         });
     }
 
