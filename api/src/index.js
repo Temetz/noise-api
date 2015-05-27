@@ -11,6 +11,12 @@ var PORT = 5300;
 // App
 var app = express();
 
+// Authentication
+var authenticated = false;
+app.locals.state = {
+    authenticated: false
+}
+
 app.use(bodyParser.json());
 app.use(cookieParser('verysecurepassword'));
 app.use('/static', express.static(__dirname + '/public'));
@@ -24,12 +30,25 @@ function checkUser(req, res, next) {
   var _ = require('underscore')
       , nonSecurePaths = ['/', '/gui/login', '/login'];
 
-  if ( _.contains(nonSecurePaths, req.path) ) return next();
+  if ( _.contains(nonSecurePaths, req.path) ){
+    if (authenticated == true) {
+        app.locals.state = {
+            authenticated: false
+        }
+    }
+    return next();
+  }
 
-  if(req.cookies.apikey == process.env.APIKEY){//authenticate user
+  if(req.cookies.apikey == process.env.APIKEY){
+        app.locals.state = {
+            authenticated: true
+        }
         next();
-    }else
-    {
+    }
+    else {
+        app.locals.state = {
+            authenticated: false
+        }
         res.redirect('/gui/login');
 
     }
@@ -63,9 +82,15 @@ app.post('/login', function (req, res) {
         res.json("Login success");
         return;
     }
-    res.cookie('apikey', '');
+    //res.cookie('apikey', '');
+    res.clearCookie('apikey', '')
     res.status(401);
     res.json("Invalid login");
+});
+
+app.post('/logout', function (req, res) {
+    res.clearCookie('apikey', '')
+    res.json("You have logged out");
 });
 
 app.get('/', function (req, res) {
@@ -84,8 +109,12 @@ app.get('/gui/target', function (req, res) {
     res.render('target');
 });
 
+app.get('/gui/logout', function (req, res) {
+        res.render('logout');
+});
+
 app.get('/gui/login', function (req, res) {
-    res.render('login');
+        res.render('login');
 });
 
 app.listen(PORT);

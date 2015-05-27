@@ -14,6 +14,16 @@ function ajaxRequest(method, url, formid){
           console.log("AJAX SUCCESS" + data);
           $("#status").addClass('alert alert-success');
           $("#status").text("Response: " + data).show();
+          if(url == '/login')
+          {
+            $("#login_li").html('<a href="/gui/logout">Logout</a>');
+            $("#configureform").hide();
+            setTimeout(function(){document.location.href = '/gui/welcome';},1200);
+          }
+          if(url == '/logout')
+          {
+            $("#login_li").html('<a href="/gui/login">Login</a>');
+          }
          })
         .fail(function(xhr) {
           $("#status").addClass('alert alert-danger');
