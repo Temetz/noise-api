@@ -1,4 +1,3 @@
-
 var express         = require('express');
 var shell           = require('shelljs');
 var path            = require("path");
@@ -12,7 +11,6 @@ var PORT = 5300;
 var app = express();
 
 // Authentication
-var authenticated = false;
 app.locals.state = {
     authenticated: false
 }
@@ -31,26 +29,19 @@ function checkUser(req, res, next) {
       , nonSecurePaths = ['/', '/gui/login', '/login'];
 
   if ( _.contains(nonSecurePaths, req.path) ){
-    if (authenticated == true) {
-        app.locals.state = {
-            authenticated: false
-        }
+    if(app.locals.state.authenticated === true){
+        return next();
     }
     return next();
   }
 
   if(req.cookies.apikey == process.env.APIKEY){
-        app.locals.state = {
-            authenticated: true
-        }
+        app.locals.state.authenticated = true;
         next();
     }
     else {
-        app.locals.state = {
-            authenticated: false
-        }
+        app.locals.state.authenticated = false;
         res.redirect('/gui/login');
-
     }
 }
 
@@ -82,7 +73,6 @@ app.post('/login', function (req, res) {
         res.json("Login success");
         return;
     }
-    //res.cookie('apikey', '');
     res.clearCookie('apikey', '')
     res.status(401);
     res.json("Invalid login");
