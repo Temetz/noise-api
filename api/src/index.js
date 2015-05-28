@@ -1,3 +1,4 @@
+
 var express         = require('express');
 var shell           = require('shelljs');
 var bodyParser      = require('body-parser');
@@ -23,7 +24,10 @@ app.use(allowCrossDomain);
 app.all('*', checkUser);
 
 function checkUser(req, res, next) {
-  if(req.cookies.apikey == process.env.APIKEY){
+if(req.method == "OPTIONS"){
+    next();
+}
+  if(req.headers.authorization == process.env.APIKEY){
         next();
     }
     else {
@@ -41,10 +45,11 @@ app.put('/limit', function (req, res) {
     }
     shell.exec(command, {silent:true});
     var status = shell.exec('sudo tc qdisc show', {silent:true}).output;
+    res.json(status);
 });
 
 app.put('/target', function (req, res) {
-    var command = "sudo sed -i '33s/.*/server target " + req.body.httptarget + "/' /etc/haproxy/haproxy.cfg";
+    var command = "sudo sed -i '32s/.*/server target " + req.body.httptarget + "/' /etc/haproxy/haproxy.cfg";
     shell.exec(command, {silent:true});
     var status = shell.exec('sudo service haproxy restart', {silent:true}).output;
     res.json(status);
@@ -52,7 +57,7 @@ app.put('/target', function (req, res) {
 
 app.get('/', function (req, res) {
     res.redirect(301, 'http://management.noise.n4sjamk.org');
-}
+});
 
 app.listen(PORT);
 console.log('Running on port:' + PORT);
