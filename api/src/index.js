@@ -30,6 +30,7 @@ function checkUser(req, res, next) {
 
   if ( _.contains(nonSecurePaths, req.path) ){
     if(app.locals.state.authenticated === true){
+        app.locals.state.authenticated = false;
         return next();
     }
     return next();
